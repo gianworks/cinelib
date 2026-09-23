@@ -1,0 +1,21 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 128px;
+  width: auto;
+  height: 60px;
+  color: white;
+  background-color: var(--secondary-color);
+}
+.logo {
+  padding-right: 40px;
+}
+.logo h1 {
+  font-weight: var(--fw-bold);
+}
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
