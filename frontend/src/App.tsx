@@ -1,7 +1,20 @@
+import { BrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import Browse from "./features/browse/Browse";
+import MyLibrary from "./features/library/MyLibrary";
 
 function App() {
   return (
-    <h1>Hello world!</h1>
+    <BrowserRouter>
+      <NavBar/>
+      <main>
+        <Routes>
+          <Route path="/" element={<Browse />} />
+          <Route path="/library" element={<MyLibrary />} />
+        </Routes>
+      </main>
+    </BrowserRouter>
   );
 }
 
