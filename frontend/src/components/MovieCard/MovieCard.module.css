@@ -1,0 +1,28 @@
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: 200px;
+  border-radius: 16px;
+  box-shadow: 0 8px 8px 0 hsla(210, 3%, 14%, 0.1);
+  overflow: hidden;
+}
+.movie-poster {
+  height: 240px;
+  width: 100%;
+}
+.movie-poster img {
+  height: 100%;
+  width: 100%;
+}
+.movie-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+.movie-title {
+  font-weight: var(--fw-medium);
+}

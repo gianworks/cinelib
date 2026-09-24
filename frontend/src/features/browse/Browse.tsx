@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import SearchBar from "../../components/SearchBar";
-import DropdownButton from "../../components/DropdownButton";
+import SearchBar from "../../components/SearchBar/SearchBar";
+import DropdownButton from "../../components/DropdownButton/DropdownButton";
 import style from "./Browse.module.css";
 import { RiFunctionLine, RiCalendarLine, RiArrowUpDownLine } from "react-icons/ri";
+import MovieCard from "../../components/MovieCard/MovieCard";
 
 function Browse() {
   const genres = ["Action", "Adventure", "Horror", "Sci-Fi"];
@@ -68,7 +69,7 @@ function Browse() {
         </div>
       </div>
       <div className={style["movie-grid"]}>
-        
+        <MovieCard title="Interstellar" releaseDate="September 24, 2026" />
       </div>
     </div>
   );
