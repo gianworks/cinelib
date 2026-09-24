@@ -4,17 +4,18 @@ import style from "./SearchBar.module.css";
 type SearchBarProps = {
   placeholder: string;
   onSearch: (query: string) => void;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 };
 
-function SearchBar({ placeholder, onSearch }: SearchBarProps) {
+function SearchBar({ placeholder, onSearch, onSubmit }: SearchBarProps) {
   return (
-    <div className={style["search-bar"]}>
+    <form onSubmit={onSubmit} className={style["search-bar"]}>
       <RiSearchLine className={style["search-icon"]} />
       <input
         placeholder={placeholder}
         onChange={(e) => onSearch(e.target.value)}
       />
-    </div>
+    </form>
   );
 }
 

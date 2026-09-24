@@ -12,9 +12,13 @@
 }
 .filters {
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
 }
 .movie-grid {
+  height: auto;
   width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
 }
