@@ -1,3 +1,4 @@
+import { RiSearchLine } from "react-icons/ri";
 import style from "./SearchBar.module.css";
 
 type SearchBarProps = {
@@ -8,6 +9,7 @@ type SearchBarProps = {
 function SearchBar({ placeholder, onSearch }: SearchBarProps) {
   return (
     <div className={style["search-bar"]}>
+      <RiSearchLine className={style["search-icon"]} />
       <input
         placeholder={placeholder}
         onChange={(e) => onSearch(e.target.value)}

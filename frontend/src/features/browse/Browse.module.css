@@ -5,3 +5,16 @@
   width: 100%;
   padding: 64px 128px;
 }
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.filters {
+  display: flex;
+  gap: 16px;
+}
+.movie-grid {
+  width: 100%;
+  display: flex;
+}

@@ -6,9 +6,10 @@
   --favorite-color: #fb7185;
   --rating-color: #f59e0b;
 
-  /* --fw-regular: 400; */
   --fw-medium: 500;
   --fw-bold: 700;
+
+  font-size: 16px;
 }
 * {
   margin: 0;
@@ -17,22 +18,37 @@
 }
 body {
   font-family: "Space Grotesk Variable", sans-serif;
+  font-size: 1rem;
   color: var(--secondary-color);
 }
 h1 {
+  font-size: 2rem;
   font-weight: var(--fw-medium);
 }
-input {
+h2 {
+  font-size: 1.5rem;
+  font-weight: var(--fw-medium);
+}
+h3 {
+  font-size: 1.25rem;
+  font-weight: var(--fw-medium);
+}
+input, button {
   font-family: inherit;
-  font-size: 16px;
+  font-size: inherit;
+}
+input {
   border: 1px solid var(--secondary-color);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 input:focus {
   outline: none;
   border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
 }
 button {
-  font-family: inherit;
+  padding: 8px 16px;
+  border-radius: 50px;
   cursor: pointer;
 }
 a {
