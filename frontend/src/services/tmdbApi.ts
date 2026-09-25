@@ -1,26 +1,36 @@
 import axios from "axios";
-
-export type Movie = {
-  id: number;
-  title: string;
-  overview: string;
-  poster_path: string | null;
-  release_date: string;
-};
+import type { Movie } from "../types/movie";
 
 const API_KEY: string = import.meta.env.VITE_TMDB_API_KEY;
-const BASE_URL: string = import.meta.env.VITE_TMDB_BASE_URL;
+const tmdbApi = axios.create({
+  baseURL: "https://api.themoviedb.org/3",
+  params: {
+    api_key: API_KEY,
+  },
+});
 
-export async function getPopularMovies(): Promise<Movie[]> {
-  const response = await axios.get(
-    `${BASE_URL}/movie/popular?api_key=${API_KEY}`,
-  );
+export async function searchMovies(query: string): Promise<Movie[]> {
+  const response = await tmdbApi.get("/search/movie", {
+    params: {
+      query,
+    },
+  });
+
   return response.data.results;
 }
 
-export async function searchMovies(query: string): Promise<Movie[]> {
-  const response = await axios.get(
-    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}`,
-  );
+export async function discoverMovies(filters?: {
+  genre?: string;
+  year?: string;
+  sortBy?: string;
+}): Promise<Movie[]> {
+  const response = await tmdbApi.get("/discover/movie", {
+    params: {
+      with_genres: filters?.genre,
+      primary_release_year: filters?.year,
+      sort_by: filters?.sortBy,
+    },
+  });
+
   return response.data.results;
 }

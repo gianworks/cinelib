@@ -8,13 +8,54 @@ import {
   RiCalendarLine,
   RiArrowUpDownLine,
 } from "react-icons/ri";
-import { getPopularMovies, searchMovies } from "../../services/tmdbAPI";
-import type { Movie } from "../../services/tmdbAPI";
+import { searchMovies, discoverMovies } from "../../services/tmdbApi";
+import type { Movie } from "../../types/movie";
 
 function Browse() {
-  const genres = ["Action", "Adventure", "Horror", "Sci-Fi"];
-  const years = ["2026", "2025", "2024", "2023"];
-  const sortOptions = ["Popularity", "Rating", "Release Date", "Title"];
+  const genres = [
+    { label: "Action", value: "28" },
+    { label: "Adventure", value: "12" },
+    { label: "Animation", value: "16" },
+    { label: "Comedy", value: "35" },
+    { label: "Crime", value: "80" },
+    { label: "Documentary", value: "99" },
+    { label: "Drama", value: "18" },
+    { label: "Family", value: "10751" },
+    { label: "Fantasy", value: "14" },
+    { label: "History", value: "36" },
+    { label: "Horror", value: "27" },
+    { label: "Music", value: "10402" },
+    { label: "Mystery", value: "9648" },
+    { label: "Romance", value: "10749" },
+    { label: "Science Fiction", value: "878" },
+    { label: "TV Movie", value: "10770" },
+    { label: "Thriller", value: "53" },
+    { label: "War", value: "10752" },
+    { label: "Western", value: "37" },
+  ];
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 20 }, (_, index) => {
+    const year = currentYear - index;
+
+    return {
+      label: String(year),
+      value: String(year),
+    };
+  });
+  const sortOptions = [
+    // {
+    //   label: "Popularity",
+    //   value: "popularity.desc",
+    // },
+    {
+      label: "Rating",
+      value: "vote_average.desc",
+    },
+    {
+      label: "Release Date",
+      value: "primary_release_date.desc",
+    },
+  ];
 
   const [movies, setMovies] = useState<Movie[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -29,13 +70,41 @@ function Browse() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const filtersRef = useRef<HTMLDivElement>(null);
 
+  function applyFilters(movies: Movie[]) {
+    let filteredMovies = [...movies];
+
+    if (selectedGenre) {
+      filteredMovies = filteredMovies.filter((movie) =>
+        movie.genre_ids?.includes(Number(selectedGenre)),
+      );
+    }
+
+    if (selectedYear) {
+      filteredMovies = filteredMovies.filter((movie) =>
+        movie.release_date?.startsWith(selectedYear),
+      );
+    }
+
+    return filteredMovies;
+  }
+
   const loadMovies = async () => {
     setIsLoading(true);
-    
+
     try {
-      const movies = searchQuery.trim()
-        ? await searchMovies(searchQuery)
-        : await getPopularMovies();
+      let movies: Movie[];
+
+      if (searchQuery.trim()) {
+        movies = await searchMovies(searchQuery);
+      } else {
+        movies = await discoverMovies({
+          genre: selectedGenre ?? undefined,
+          year: selectedYear ?? undefined,
+          sortBy: selectedSort ?? "popularity.desc",
+        });
+      }
+
+      movies = applyFilters(movies);
       setMovies(movies);
       setError(null);
     } catch (error) {
@@ -56,7 +125,7 @@ function Browse() {
 
   useEffect(() => {
     loadMovies();
-  }, []);
+  }, [selectedGenre, selectedYear, selectedSort]);
 
   // close dropdown when clicking outside
   useEffect(() => {
@@ -83,6 +152,7 @@ function Browse() {
           <DropdownButton
             icon={RiFunctionLine}
             label="Genre"
+            defaultOption="All"
             options={genres}
             selectedOption={selectedGenre}
             isOpen={activeDropdown === "genre"}
@@ -92,6 +162,7 @@ function Browse() {
           <DropdownButton
             icon={RiCalendarLine}
             label="Year"
+            defaultOption="All"
             options={years}
             selectedOption={selectedYear}
             isOpen={activeDropdown === "year"}
@@ -100,7 +171,8 @@ function Browse() {
           />
           <DropdownButton
             icon={RiArrowUpDownLine}
-            label="Sort By"
+            label="Popularity"
+            defaultOption="Popularity"
             options={sortOptions}
             selectedOption={selectedSort}
             isOpen={activeDropdown === "sort"}
