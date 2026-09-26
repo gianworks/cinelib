@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import NavBar from "./components/Navbar/Navbar";
 import Browse from "./features/browse/Browse";
 import MyLibrary from "./features/library/MyLibrary";
+import MovieDetails from "./features/movie_details/MovieDetails";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Browse />} />
           <Route path="/library" element={<MyLibrary />} />
+          <Route path="/movie/:id" element={<MovieDetails />} />
         </Routes>
       </main>
     </BrowserRouter>

@@ -1,33 +1,39 @@
+import { Link } from "react-router-dom";
 import style from "./MovieCard.module.css";
 
 type MovieCardProps = {
+  id: number;
   title: string;
   releaseDate: string;
   posterPath?: string | null;
 };
 
-function MovieCard({ title, releaseDate, posterPath }: MovieCardProps) {
-  function formatDate(dateString: string) {
+function MovieCard({ id, title, releaseDate, posterPath }: MovieCardProps) {
+  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
       year: "numeric",
     });
-  }
+  };
 
   return (
-    <div className={style["movie-card"]}>
-      <div className={style["movie-poster"]}>
+    <Link to={`/movie/${id}`} className={style["movie-card"]}>
+      <div className={style["poster"]}>
         <img
-          src={posterPath ? `https://image.tmdb.org/t/p/w500${posterPath}` : undefined}
+          src={
+            posterPath
+              ? `https://image.tmdb.org/t/p/w500${posterPath}`
+              : undefined
+          }
           alt={`${title} Poster`}
         />
       </div>
-      <div className={style["movie-info"]}>
-        <p className={style["movie-title"]}>{title}</p>
+      <div className={style["info"]}>
+        <p className={style["title"]}>{title}</p>
         <p>{formatDate(releaseDate)}</p>
       </div>
-    </div>
+    </Link>
   );
 }
 

@@ -1,4 +1,4 @@
-.movie-card {
+.cast-card {
   display: flex;
   flex-direction: column;
   height: auto;
@@ -7,11 +7,11 @@
   box-shadow: 0 8px 8px 0 hsla(210, 3%, 14%, 0.1);
   overflow: hidden;
 }
-.poster {
+.profile {
   width: 100%;
   aspect-ratio: 2/3;
 }
-.poster img {
+.profile img {
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -25,6 +25,6 @@
   word-wrap: break-word;
   overflow: hidden;
 }
-.title {
-  font-weight: var(--fw-medium);
+.name {
+ font-weight: var(--fw-medium); 
 }

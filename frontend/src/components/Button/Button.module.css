@@ -1,0 +1,35 @@
+.button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  transition: 0.2s ease, scale 0.15s ease-in-out;
+}
+button:active {
+  scale: 0.95;
+}
+.primary {
+  border: none;
+  background: var(--primary-color);
+}
+.primary:hover {
+  opacity: 0.8;
+}
+.secondary {
+  background: transparent;
+  border: 1px solid white;
+}
+.secondary:hover {
+  background: hsla(0, 0%, 100%, 0.1);
+}
+.tertiary {
+  background: transparent;
+  border: none;
+}
+.tertiary:hover {
+  background: hsla(0, 0%, 100%, 0.1);
+}
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

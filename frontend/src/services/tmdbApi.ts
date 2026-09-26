@@ -1,5 +1,7 @@
 import axios from "axios";
 import type { Movie } from "../types/movie";
+import type { MovieDetails } from "../types/MovieDetails";
+import type { MovieCredits } from "../types/MovieCredits";
 
 const API_KEY: string = import.meta.env.VITE_TMDB_API_KEY;
 const tmdbApi = axios.create({
@@ -15,7 +17,6 @@ export async function searchMovies(query: string): Promise<Movie[]> {
       query,
     },
   });
-
   return response.data.results;
 }
 
@@ -31,6 +32,15 @@ export async function discoverMovies(filters?: {
       sort_by: filters?.sortBy,
     },
   });
-
   return response.data.results;
+}
+
+export async function getMovieDetails(id: string): Promise<MovieDetails> {
+  const response = await tmdbApi.get(`/movie/${id}`);
+  return response.data;
+}
+
+export async function getMovieCredits(id: string): Promise<MovieCredits> {
+  const response = await tmdbApi.get(`/movie/${id}/credits`);
+  return response.data;
 }

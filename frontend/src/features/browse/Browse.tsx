@@ -60,9 +60,6 @@ function Browse() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
   const [selectedSort, setSelectedSort] = useState<string | null>(null);
@@ -70,23 +67,23 @@ function Browse() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const filtersRef = useRef<HTMLDivElement>(null);
 
-  function applyFilters(movies: Movie[]) {
-    let filteredMovies = [...movies];
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    if (selectedGenre) {
-      filteredMovies = filteredMovies.filter((movie) =>
-        movie.genre_ids?.includes(Number(selectedGenre)),
-      );
-    }
+  useEffect(() => {
+    loadMovies();
+  }, [selectedGenre, selectedYear, selectedSort]);
 
-    if (selectedYear) {
-      filteredMovies = filteredMovies.filter((movie) =>
-        movie.release_date?.startsWith(selectedYear),
-      );
-    }
+  // close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) =>
+      filtersRef.current &&
+      !filtersRef.current.contains(e.target as Node) &&
+      setActiveDropdown(null);
 
-    return filteredMovies;
-  }
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   const loadMovies = async () => {
     setIsLoading(true);
@@ -115,6 +112,24 @@ function Browse() {
     }
   };
 
+  const applyFilters = (movies: Movie[]) => {
+    let filteredMovies = [...movies];
+
+    if (selectedGenre) {
+      filteredMovies = filteredMovies.filter((movie) =>
+        movie.genre_ids?.includes(Number(selectedGenre)),
+      );
+    }
+
+    if (selectedYear) {
+      filteredMovies = filteredMovies.filter((movie) =>
+        movie.release_date?.startsWith(selectedYear),
+      );
+    }
+
+    return filteredMovies;
+  };
+
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     loadMovies();
@@ -122,21 +137,6 @@ function Browse() {
 
   const handleToggle = (dropdown: string) =>
     setActiveDropdown((current) => (current === dropdown ? null : dropdown));
-
-  useEffect(() => {
-    loadMovies();
-  }, [selectedGenre, selectedYear, selectedSort]);
-
-  // close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) =>
-      filtersRef.current &&
-      !filtersRef.current.contains(e.target as Node) &&
-      setActiveDropdown(null);
-
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
 
   return (
     <div className={style.main}>
@@ -190,6 +190,7 @@ function Browse() {
         <div className={style["movie-grid"]}>
           {movies.map((movie) => (
             <MovieCard
+              id={movie.id}
               title={movie.title}
               releaseDate={movie.release_date}
               posterPath={movie.poster_path}
