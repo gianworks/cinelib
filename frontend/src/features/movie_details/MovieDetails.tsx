@@ -1,4 +1,4 @@
-import { useState, useEffect, act } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import type { MovieDetails } from "../../types/MovieDetails";
 import type { MovieCredits } from "../../types/MovieCredits";
@@ -28,8 +28,10 @@ function MovieDetails() {
       setIsLoading(true);
 
       try {
-        const movieData = await getMovieDetails(id);
-        const creditsData = await getMovieCredits(id);
+        const [movieData, creditsData] = await Promise.all([
+          getMovieDetails(id),
+          getMovieCredits(id),
+        ]);
 
         setMovie(movieData);
         setCredits(creditsData);
