@@ -37,6 +37,22 @@ export async function getLibraryMovieById(req: Request, res: Response) {
   }
 }
 
+export async function getLibraryMovieByTmdbId(req: Request, res: Response) {
+  try {
+    const tmdb_id = Number(req.params.tmdb_id);
+
+    const movie = await libraryService.getMovieByTmdbId(tmdb_id);
+
+    res.status(200).json(movie ?? null);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to find movie",
+    });
+  }
+}
+
 export async function createLibraryMovie(req: Request, res: Response) {
   try {
     const movie = await libraryService.addMovie(req.body);

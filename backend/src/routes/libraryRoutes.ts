@@ -5,6 +5,7 @@ import {
   createLibraryMovie,
   updateLibraryMovie,
   deleteLibraryMovie,
+  getLibraryMovieByTmdbId
 } from "../controllers/libraryController";
 
 const router = Router();
@@ -12,6 +13,8 @@ const router = Router();
 router.get("/", getLibraryMovies);
 
 router.get("/:id", getLibraryMovieById);
+
+router.get("/tmdb/:tmdb_id", getLibraryMovieByTmdbId);
 
 router.post("/", createLibraryMovie);
 

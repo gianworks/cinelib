@@ -29,6 +29,19 @@ export async function getMovieById(id: number) {
   return result.rows[0];
 }
 
+export async function getMovieByTmdbId(tmdb_id: number) {
+  const result = await pool.query(
+    `
+    SELECT *
+    FROM library_movies
+    WHERE tmdb_id = $1
+    `,
+    [tmdb_id],
+  );
+
+  return result.rows[0];
+}
+
 export async function addMovie(movie: CreateLibraryMovie) {
   const result = await pool.query(
     `

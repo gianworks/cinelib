@@ -7,15 +7,20 @@ import style from "./MovieDetails.module.css";
 import { RiStarSFill, RiBookmark3Fill } from "react-icons/ri";
 import Button from "../../components/Button/Button";
 import CastCard from "../../components/CastCard/CastCard";
+import {
+  addLibraryMovie,
+  getLibraryMovieByTmdbId,
+} from "../../services/libraryApi";
 
 function MovieDetails() {
   const { id } = useParams();
 
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [credits, setCredits] = useState<MovieCredits | null>(null);
+  const [isInLibrary, setIsInLibrary] = useState(false);
 
   const topCrew = credits?.crew
-    .filter((person) => person.job === "Director" || "Producer")
+    // .filter((person) => person.job === "Director" || person.job === "Producer")
     .slice(0, 6);
   const topCast = credits?.cast.slice(0, 10);
 
@@ -35,6 +40,10 @@ function MovieDetails() {
 
         setMovie(movieData);
         setCredits(creditsData);
+
+        const libraryMovie = await getLibraryMovieByTmdbId(movieData.id);
+        setIsInLibrary(libraryMovie !== null);
+
         setError(null);
       } catch (error) {
         console.error(error);
@@ -46,6 +55,25 @@ function MovieDetails() {
 
     loadMovie();
   }, [id]);
+
+  const handleAddToLibrary = async () => {
+    if (!movie) return;
+
+    try {
+      await addLibraryMovie({
+        tmdb_id: movie.id,
+        watch_status: "To Watch",
+        rating: null,
+        notes: null,
+        is_favorite: false,
+      });
+
+      setIsInLibrary(true);
+      console.log("Movie added to library");
+    } catch (error) {
+      console.error("Failed to add movie:", error);
+    }
+  };
 
   const formatDate = (date: string | null) => {
     if (!date) return "N/A";
@@ -125,14 +153,19 @@ function MovieDetails() {
                   </p>
                 </div>
                 <div className={style["actions"]}>
-                  <Button variant="primary">
-                    <RiBookmark3Fill className={style["icon"]} /> Add to Library
+                  <Button
+                    variant="primary"
+                    onClick={handleAddToLibrary}
+                    disabled={isInLibrary}
+                  >
+                    <RiBookmark3Fill className={style["icon"]} />{" "}
+                    {isInLibrary ? "Already in Library" : "Add to Library"}
                   </Button>
                 </div>
                 <p>{movie?.overview}</p>
                 <div className={style["top-crew-grid"]}>
                   {topCrew?.map((member) => (
-                    <div key={member.id}>
+                    <div key={`${member.id}-${member.job}`}>
                       <p className={style["crew-member"]}>{member.name}</p>
                       <p>{member.job}</p>
                     </div>
