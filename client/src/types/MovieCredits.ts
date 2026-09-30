@@ -1,4 +1,3 @@
-
 type CastMember = {
   id: number;
   name: string;
@@ -7,7 +6,7 @@ type CastMember = {
 };
 
 export type MovieCredits = {
-cast: CastMember[];
+  cast: CastMember[];
   crew: {
     id: number;
     name: string;

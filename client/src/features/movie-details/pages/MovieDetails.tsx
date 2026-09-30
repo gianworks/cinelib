@@ -1,9 +1,18 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
-import type { MovieDetails } from "../../types/MovieDetails";
-import type { MovieCredits } from "../../types/MovieCredits";
-import { getMovieCredits, getMovieDetails } from "../../services/tmdbApi";
 import style from "./MovieDetails.module.css";
+import Button from "../../../components/Button/Button";
+import DropdownButton from "../../../components/DropdownButton/DropdownButton";
+import CastCard from "../components/CastCard/CastCard";
+import { getMovieCredits, getMovieDetails } from "../../../api/tmdbApi";
+import {
+  addLibraryMovie,
+  getLibraryMovieByTmdbId,
+  updateLibraryMovie,
+  deleteLibraryMovie,
+} from "../../../api/libraryApi";
+import type { MovieDetails as MovieDetailsType } from "../../../types/MovieDetails";
+import type { MovieCredits } from "../../../types/MovieCredits";
 import {
   RiStarLine,
   RiStarSFill,
@@ -13,15 +22,6 @@ import {
   RiHeart3Fill,
   RiBookmark2Fill,
 } from "react-icons/ri";
-import Button from "../../components/Button/Button";
-import CastCard from "../../components/CastCard/CastCard";
-import {
-  addLibraryMovie,
-  getLibraryMovieByTmdbId,
-  updateLibraryMovie,
-  deleteLibraryMovie,
-} from "../../services/libraryApi";
-import DropdownButton from "../../components/DropdownButton/DropdownButton";
 
 function MovieDetails() {
   const { id } = useParams();
@@ -31,7 +31,7 @@ function MovieDetails() {
 
   const fromLibrary = location.state?.fromLibrary ?? false;
 
-  const [movie, setMovie] = useState<MovieDetails | null>(null);
+  const [movie, setMovie] = useState<MovieDetailsType | null>(null);
   const [credits, setCredits] = useState<MovieCredits | null>(null);
   const [isInLibrary, setIsInLibrary] = useState(false);
   const [watchStatus, setWatchStatus] = useState<string>("To Watch");

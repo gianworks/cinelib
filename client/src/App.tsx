@@ -1,9 +1,9 @@
 import { BrowserRouter } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import NavBar from "./components/Navbar/Navbar";
-import Browse from "./features/browse/Browse";
-import MyLibrary from "./features/library/MyLibrary";
-import MovieDetails from "./features/movie_details/MovieDetails";
+import Browse from "./features/browse/pages/Browse";
+import MyLibrary from "./features/library/pages/MyLibrary";
+import MovieDetails from "./features/movie-details/pages/MovieDetails";
 
 function App() {
   return (

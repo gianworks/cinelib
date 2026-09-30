@@ -1,11 +1,11 @@
-import style from "./MyLibrary.module.css";
-import SearchBar from "../../components/SearchBar/SearchBar";
-import type { LibraryMovie } from "../../types/LibraryMovie";
-import type { MovieDetails } from "../../types/MovieDetails";
 import { useEffect, useState } from "react";
-import { getLibraryMovies } from "../../services/libraryApi";
-import { getMovieDetails } from "../../services/tmdbApi";
-import LibraryMovieCard from "../../components/LibraryMovieCard/LibraryMovieCard";
+import style from "./MyLibrary.module.css";
+import SearchBar from "../../../components/SearchBar/SearchBar";
+import LibraryMovieCard from "../components/LibraryMovieCard/LibraryMovieCard";
+import type { LibraryMovie } from "../../../types/LibraryMovie";
+import type { MovieDetails } from "../../../types/MovieDetails";
+import { getLibraryMovies } from "../../../api/libraryApi";
+import { getMovieDetails } from "../../../api/tmdbApi";
 
 type LibraryMovieWithDetails = {
   library: LibraryMovie;
@@ -24,7 +24,6 @@ function MyLibrary() {
 
       try {
         const libraryMovies = await getLibraryMovies();
-
         const moviesWithDetails = await Promise.all(
           libraryMovies.map(async (libraryMovie) => {
             const movie = await getMovieDetails(

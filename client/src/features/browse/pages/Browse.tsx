@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-import SearchBar from "../../components/SearchBar/SearchBar";
-import DropdownButton from "../../components/DropdownButton/DropdownButton";
-import MovieCard from "../../components/MovieCard/MovieCard";
 import style from "./Browse.module.css";
+import SearchBar from "../../../components/SearchBar/SearchBar";
+import DropdownButton from "../../../components/DropdownButton/DropdownButton";
+import MovieCard from "../components/MovieCard/MovieCard";
+import { searchMovies, discoverMovies } from "../../../api/tmdbApi";
+import type { Movie } from "../../../types/Movie";
 import {
   RiFunctionLine,
   RiCalendarLine,
   RiArrowUpDownLine,
 } from "react-icons/ri";
-import { searchMovies, discoverMovies } from "../../services/tmdbApi";
-import type { Movie } from "../../types/Movie";
 
 function Browse() {
   const genres = [
