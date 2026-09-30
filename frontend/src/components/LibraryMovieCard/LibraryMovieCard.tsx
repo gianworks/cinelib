@@ -11,6 +11,7 @@ import {
 type LibraryMovieCardProps = {
   id: number;
   title: string;
+  tmdbId: number;
   releaseDate: string;
   watchStatus: string;
   rating: number | null;
@@ -20,6 +21,7 @@ type LibraryMovieCardProps = {
 
 function LibraryMovieCard({
   id,
+  tmdbId,
   title,
   releaseDate,
   watchStatus,
@@ -66,7 +68,11 @@ function LibraryMovieCard({
   };
 
   return (
-    <Link to={`/movie/${id}`} className={style["library-movie-card"]}>
+    <Link
+      to={`/movie/${tmdbId}`}
+      state={{ fromLibrary: true, libraryId: id }}
+      className={style["library-movie-card"]}
+    >
       <div className={style["poster"]}>
         <img
           src={

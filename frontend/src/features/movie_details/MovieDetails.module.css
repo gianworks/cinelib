@@ -66,6 +66,19 @@
   height: 24px;
   width: 24px;
 }
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.favorite-btn {
+  border: 1px solid var(--favorite-color) !important;
+  color: var(--favorite-color) !important;
+}
+.favorite-active {
+  background-color: var(--favorite-color) !important;
+  color: white !important;
+}
 .top-crew-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -77,12 +90,52 @@
 .crew-member {
   font-weight: var(--fw-medium);
 }
-.top-cast {
+.top-cast, .review {
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 0 128px;
+}
+.rating {
+  display: flex;
+  gap: 8px;
+  font-size: 2rem;
+}
+.unrated {
+  color: var(--tertiary-color);
+}
+.rated {
+  color: var(--rating-color);
+}
+.rating-star {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+.rating-star:hover {
+  opacity: 0.7;
+}
+.rating-star:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+.notes {
+  resize: none;
+  padding: 16px;
+  font-size: 1rem;
+  border: 1px solid var(--secondary-color);
+  border-radius: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.notes:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
 }
 .top-cast-grid {
   display: grid;

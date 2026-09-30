@@ -69,6 +69,7 @@ function MyLibrary() {
           {movies.map((item) => (
             <LibraryMovieCard
               id={item.movie.id}
+              tmdbId={item.library.tmdb_id}
               title={item.movie.title}
               releaseDate={item.movie.release_date}
               watchStatus={item.library.watch_status}

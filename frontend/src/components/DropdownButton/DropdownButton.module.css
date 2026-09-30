@@ -1,12 +1,10 @@
 .dropdown-button {
   position: relative;
-  background-color: transparent;
-  border: 1px solid var(--secondary-color);
   transition: color 0.2s ease, border-color 0.2s ease;
 }
 .dropdown-button-active {
   color: var(--primary-color);
-  border-color: var(--primary-color);
+  border-color: var(--primary-color) !important;
 }
 .dropdown-button-content {
   display: flex;
@@ -38,4 +36,26 @@
 }
 .dropdown-menu button:hover {
   color: var(--primary-color);
+}
+.primary {
+  border: none;
+  color: white;
+  background: var(--primary-color);
+}
+.primary:hover {
+  opacity: 0.8;
+}
+.secondary {
+  background: transparent;
+  border: 1px solid var(--secondary-color);
+}
+.secondary:hover {
+  background: hsla(0, 0%, 100%, 0.1);
+}
+.tertiary {
+  background: transparent;
+  border: none;
+}
+.tertiary:hover {
+  background: hsla(0, 0%, 100%, 0.1);
 }

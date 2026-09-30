@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Movie } from "../types/movie";
+import type { Movie } from "../types/Movie";
 import type { MovieDetails } from "../types/MovieDetails";
 import type { MovieCredits } from "../types/MovieCredits";
 

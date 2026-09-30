@@ -1,31 +1,69 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import type { MovieDetails } from "../../types/MovieDetails";
 import type { MovieCredits } from "../../types/MovieCredits";
 import { getMovieCredits, getMovieDetails } from "../../services/tmdbApi";
 import style from "./MovieDetails.module.css";
-import { RiStarSFill, RiBookmark3Fill } from "react-icons/ri";
+import {
+  RiStarLine,
+  RiStarSFill,
+  RiBookmark3Fill,
+  RiEyeCloseLine,
+  RiHeart3Line,
+  RiHeart3Fill,
+  RiBookmark2Fill,
+} from "react-icons/ri";
 import Button from "../../components/Button/Button";
 import CastCard from "../../components/CastCard/CastCard";
 import {
   addLibraryMovie,
   getLibraryMovieByTmdbId,
+  updateLibraryMovie,
+  deleteLibraryMovie,
 } from "../../services/libraryApi";
+import DropdownButton from "../../components/DropdownButton/DropdownButton";
 
 function MovieDetails() {
   const { id } = useParams();
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const fromLibrary = location.state?.fromLibrary ?? false;
+
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [credits, setCredits] = useState<MovieCredits | null>(null);
   const [isInLibrary, setIsInLibrary] = useState(false);
+  const [watchStatus, setWatchStatus] = useState<string>("To Watch");
+  const [isWatchStatusOpen, setIsWatchStatusOpen] = useState(false);
+  const [libraryMovieId, setLibraryMovieId] = useState<number | null>(null);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [rating, setRating] = useState<number | null>(null);
+  const [notes, setNotes] = useState("");
+  const [savedNotes, setSavedNotes] = useState("");
+
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const topCrew = credits?.crew
     // .filter((person) => person.job === "Director" || person.job === "Producer")
     .slice(0, 6);
   const topCast = credits?.cast.slice(0, 10);
 
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const watchStatusOptions = [
+    {
+      label: "To Watch",
+      value: "To Watch",
+    },
+    {
+      label: "Watching",
+      value: "Watching",
+    },
+    {
+      label: "Watched",
+      value: "Watched",
+    },
+  ];
 
   useEffect(() => {
     async function loadMovie() {
@@ -42,7 +80,15 @@ function MovieDetails() {
         setCredits(creditsData);
 
         const libraryMovie = await getLibraryMovieByTmdbId(movieData.id);
-        setIsInLibrary(libraryMovie !== null);
+        if (libraryMovie) {
+          setIsInLibrary(true);
+          setWatchStatus(libraryMovie.watch_status);
+          setLibraryMovieId(libraryMovie.id);
+          setIsFavorite(libraryMovie.is_favorite);
+          setRating(libraryMovie.rating);
+          setNotes(libraryMovie.notes ?? "");
+          setSavedNotes(libraryMovie.notes ?? "");
+        }
 
         setError(null);
       } catch (error) {
@@ -72,6 +118,82 @@ function MovieDetails() {
       console.log("Movie added to library");
     } catch (error) {
       console.error("Failed to add movie:", error);
+    }
+  };
+
+  const handleWatchStatusChange = async (status: string | null) => {
+    if (!libraryMovieId || !status) return;
+
+    try {
+      await updateLibraryMovie(libraryMovieId, {
+        watch_status: status,
+      });
+
+      setWatchStatus(status);
+    } catch (error) {
+      console.error("Failed to update watch status:", error);
+    }
+  };
+
+  const handleFavoriteToggle = async () => {
+    if (!libraryMovieId) return;
+
+    try {
+      await updateLibraryMovie(libraryMovieId, {
+        is_favorite: !isFavorite,
+      });
+
+      setIsFavorite(!isFavorite);
+    } catch (error) {
+      console.error("Failed to update favorite:", error);
+    }
+  };
+
+  const handleRemoveFromLibrary = async () => {
+    if (!libraryMovieId) return;
+
+    const confirmed = window.confirm("Remove this movie from your library?");
+
+    if (!confirmed) return;
+
+    try {
+      await deleteLibraryMovie(libraryMovieId);
+
+      navigate("/library");
+    } catch (error) {
+      console.error("Failed to remove movie:", error);
+    }
+  };
+
+  const handleRatingChange = async (selectedRating: number) => {
+    if (!libraryMovieId) return;
+
+    const newRating = rating === selectedRating ? null : selectedRating;
+
+    try {
+      await updateLibraryMovie(libraryMovieId, {
+        rating: newRating,
+      });
+
+      setRating(newRating);
+    } catch (error) {
+      console.error("Failed to update rating:", error);
+    }
+  };
+
+  const handleNotesBlur = async () => {
+    if (!libraryMovieId) return;
+
+    if (notes === savedNotes) return;
+
+    try {
+      await updateLibraryMovie(libraryMovieId, {
+        notes,
+      });
+
+      setSavedNotes(notes);
+    } catch (error) {
+      console.error("Failed to update notes:", error);
     }
   };
 
@@ -153,14 +275,53 @@ function MovieDetails() {
                   </p>
                 </div>
                 <div className={style["actions"]}>
-                  <Button
-                    variant="primary"
-                    onClick={handleAddToLibrary}
-                    disabled={isInLibrary}
-                  >
-                    <RiBookmark3Fill className={style["icon"]} />{" "}
-                    {isInLibrary ? "Already in Library" : "Add to Library"}
-                  </Button>
+                  {fromLibrary ? (
+                    <>
+                      <DropdownButton
+                        icon={RiEyeCloseLine}
+                        label="Watch Status"
+                        defaultOption=""
+                        options={watchStatusOptions}
+                        selectedOption={watchStatus}
+                        isOpen={isWatchStatusOpen}
+                        onToggle={() =>
+                          setIsWatchStatusOpen(!isWatchStatusOpen)
+                        }
+                        onSelect={handleWatchStatusChange}
+                      />
+                      <Button
+                        variant="secondary"
+                        onClick={handleFavoriteToggle}
+                        className={`${style["favorite-btn"]} ${
+                          isFavorite ? style["favorite-active"] : ""
+                        }`}
+                      >
+                        {isFavorite ? (
+                          <RiHeart3Fill className={style["icon"]} />
+                        ) : (
+                          <RiHeart3Line className={style["icon"]} />
+                        )}
+
+                        {isFavorite ? "Favorited" : "Favorite"}
+                      </Button>
+                      <Button
+                        variant="tertiary"
+                        onClick={handleRemoveFromLibrary}
+                      >
+                        <RiBookmark2Fill className={style["icon"]} />
+                        Remove
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      onClick={handleAddToLibrary}
+                      disabled={isInLibrary}
+                    >
+                      <RiBookmark3Fill className={style["icon"]} />{" "}
+                      {isInLibrary ? "Already in Library" : "Add to Library"}
+                    </Button>
+                  )}
                 </div>
                 <p>{movie?.overview}</p>
                 <div className={style["top-crew-grid"]}>
@@ -174,6 +335,44 @@ function MovieDetails() {
               </div>
             </div>
           </div>
+          {fromLibrary && (
+            <div className={style["review"]}>
+              <h2>Your Review</h2>
+
+              <div
+                className={style["rating"]}
+                role="group"
+                aria-label="Rate this movie from 1 to 5 stars"
+              >
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    className={`${style["rating-star"]} ${
+                      rating !== null ? style["rated"] : style["unrated"]
+                    }`}
+                    onClick={() => handleRatingChange(star)}
+                    aria-label={`${star} star${star > 1 ? "s" : ""}`}
+                    aria-pressed={rating === star}
+                  >
+                    {rating !== null && star <= rating ? (
+                      <RiStarSFill />
+                    ) : (
+                      <RiStarLine />
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              <textarea
+                placeholder="What did you think?"
+                className={style["notes"]}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                onBlur={handleNotesBlur}
+              />
+            </div>
+          )}
           <div className={style["top-cast"]}>
             <h2>Top Cast</h2>
             <div className={style["top-cast-grid"]}>

@@ -75,7 +75,7 @@ export async function updateMovie(id: number, movie: UpdateLibraryMovie) {
     UPDATE library_movies
     SET
       watch_status = COALESCE($1, watch_status),
-      rating = COALESCE($2, rating),
+      rating = $2,
       notes = COALESCE($3, notes),
       is_favorite = COALESCE($4, is_favorite)
     WHERE id = $5

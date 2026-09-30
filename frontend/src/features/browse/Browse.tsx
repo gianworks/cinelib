@@ -9,7 +9,7 @@ import {
   RiArrowUpDownLine,
 } from "react-icons/ri";
 import { searchMovies, discoverMovies } from "../../services/tmdbApi";
-import type { Movie } from "../../types/movie";
+import type { Movie } from "../../types/Movie";
 
 function Browse() {
   const genres = [
@@ -153,31 +153,37 @@ function Browse() {
             icon={RiFunctionLine}
             label="Genre"
             defaultOption="All"
+            allowReset
             options={genres}
             selectedOption={selectedGenre}
             isOpen={activeDropdown === "genre"}
             onToggle={() => handleToggle("genre")}
             onSelect={setSelectedGenre}
+            variant="secondary"
           />
           <DropdownButton
             icon={RiCalendarLine}
             label="Year"
             defaultOption="All"
+            allowReset
             options={years}
             selectedOption={selectedYear}
             isOpen={activeDropdown === "year"}
             onToggle={() => handleToggle("year")}
             onSelect={setSelectedYear}
+            variant="secondary"
           />
           <DropdownButton
             icon={RiArrowUpDownLine}
             label="Popularity"
             defaultOption="Popularity"
+            allowReset
             options={sortOptions}
             selectedOption={selectedSort}
             isOpen={activeDropdown === "sort"}
             onToggle={() => handleToggle("sort")}
             onSelect={setSelectedSort}
+            variant="secondary"
           />
         </div>
       </div>

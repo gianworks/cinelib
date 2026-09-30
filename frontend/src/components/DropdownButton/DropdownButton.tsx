@@ -2,6 +2,8 @@ import type { IconType } from "react-icons";
 import { RiArrowDownSLine } from "react-icons/ri";
 import styles from "./DropdownButton.module.css";
 
+type ButtonVariant = "primary" | "secondary" | "tertiary";
+
 type DropdownOption = {
   label: string;
   value: string;
@@ -16,6 +18,8 @@ type DropdownButtonProps = {
   isOpen: boolean;
   onToggle: () => void;
   onSelect: (option: string | null) => void;
+  allowReset?: boolean;
+  variant?: ButtonVariant;
 };
 
 function DropdownButton({
@@ -27,13 +31,15 @@ function DropdownButton({
   isOpen,
   onToggle,
   onSelect,
+  allowReset = false,
+  variant = "primary",
 }: DropdownButtonProps) {
   const selectedLabel = options.find(
     (option) => option.value === selectedOption,
   )?.label;
 
-  function handleSelect(option: string) {
-    onSelect(option === defaultOption ? null : option);
+  function handleSelect(option: string | null) {
+    onSelect(option);
     onToggle();
   }
 
@@ -44,7 +50,7 @@ function DropdownButton({
           isOpen || selectedOption !== null
             ? styles["dropdown-button-active"]
             : ""
-        }`}
+        } ${styles[variant]}`}
         onClick={onToggle}
       >
         <div className={styles["dropdown-button-content"]}>
@@ -56,9 +62,9 @@ function DropdownButton({
 
       {isOpen && (
         <div className={styles["dropdown-menu"]}>
-          <button onClick={() => handleSelect(defaultOption)}>
-            {defaultOption}
-          </button>
+          {allowReset && defaultOption && (
+            <button onClick={() => handleSelect(null)}>{defaultOption}</button>
+          )}
 
           {options.map((option) => (
             <button
