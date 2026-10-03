@@ -1,6 +1,6 @@
 import app from "./app";
 import dotenv from "dotenv";
-import { initializeDatabaseConnection } from "./config/database";
+// import { initializeDatabaseConnection } from "./config/database";
 import initDatabase from "./config/initDatabase";
 
 dotenv.config();
@@ -8,7 +8,7 @@ dotenv.config();
 const PORT = process.env.PORT;
 
 async function startServer() {
-  await initializeDatabaseConnection();
+//   await initializeDatabaseConnection();
   await initDatabase();
 
   app.listen(PORT, () => {
